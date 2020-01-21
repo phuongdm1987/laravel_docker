@@ -26,7 +26,7 @@ GRANT ALL ON `backend`.* TO 'henry'@'%' ;
 CREATE DATABASE IF NOT EXISTS `vnecos` COLLATE 'utf8_general_ci' ;
 GRANT ALL ON `vnecos`.* TO 'henry'@'%' ;
 
-CREATE DATABASE IF NOT EXISTS `cevekgam` COLLATE 'utf8_general_ci' ;
-GRANT ALL ON `cevekgam`.* TO 'henry'@'%' ;
+CREATE DATABASE IF NOT EXISTS `ecommerce` COLLATE 'utf8_general_ci' ;
+GRANT ALL ON `ecommerce`.* TO 'henry'@'%' ;
 
 FLUSH PRIVILEGES ;
