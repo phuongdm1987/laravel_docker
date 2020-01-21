@@ -20,6 +20,9 @@ ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'M[SQhHTv
 ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY 'M[SQhHTvRXgvl4x4slNl';
 ALTER USER 'henry'@'%' IDENTIFIED WITH mysql_native_password BY 'WtiYJS_MkUk4mQSp04]I';
 
+CREATE DATABASE IF NOT EXISTS `backend` COLLATE 'utf8_general_ci' ;
+GRANT ALL ON `backend`.* TO 'henry'@'%' ;
+
 CREATE DATABASE IF NOT EXISTS `vnecos` COLLATE 'utf8_general_ci' ;
 GRANT ALL ON `vnecos`.* TO 'henry'@'%' ;
 
