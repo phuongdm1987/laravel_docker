@@ -41,9 +41,11 @@ RUN docker-php-ext-install pcntl
 # Add PHP-bcmath Extenstions
 RUN docker-php-ext-install bcmath
 
+# Add and Enable PHP-REDIS Extensions
+RUN pecl install redis && docker-php-ext-enable redis
+
 # Add xdebug
-RUN pecl install xdebug
-RUN docker-php-ext-enable xdebug
+RUN pecl install xdebug && docker-php-ext-enable xdebug
 
 # Copy xdebug configuration for remote debugging
 COPY ./xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini

@@ -8,6 +8,8 @@ services:
       dockerfile: Dockerfile
     image: backend-app
     container_name: app
+    extra_hosts:
+      - "dockerhost:${DOCKER_HOST_IP}"
     volumes:
       - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
     networks:
