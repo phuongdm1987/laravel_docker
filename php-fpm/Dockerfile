@@ -29,7 +29,11 @@ RUN apk update && apk add bash && apk add --no-cache \
     php7-zlib \
     php7-dev \
     nodejs \
-    npm
+    npm \
+    python \
+    py-pip \
+    python-dev \
+    libpng-dev
 
 # Add and Enable PHP-PDO Extenstions
 RUN docker-php-ext-install pdo pdo_mysql
@@ -44,6 +48,9 @@ RUN docker-php-ext-install bcmath
 # Add and Enable PHP-REDIS Extensions
 RUN pecl install redis && docker-php-ext-enable redis
 
+# Add GD Extension
+RUN docker-php-ext-install gd
+
 # Add xdebug
 RUN pecl install xdebug && docker-php-ext-enable xdebug
 
@@ -56,6 +63,10 @@ RUN sed -i "s/xdebug.remote_autostart=0/xdebug.remote_autostart=1/" /usr/local/e
 
 # Install PHP Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Install Python
+RUN python -m pip install --upgrade pip  \
+  && python -m pip install --upgrade virtualenv
 
 # Remove Cache
 RUN rm -rf /var/cache/apk/*
