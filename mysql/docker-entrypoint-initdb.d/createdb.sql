@@ -29,4 +29,7 @@ GRANT ALL ON `vnecos`.* TO 'henry'@'%' ;
 CREATE DATABASE IF NOT EXISTS `ecommerce` COLLATE 'utf8_general_ci' ;
 GRANT ALL ON `ecommerce`.* TO 'henry'@'%' ;
 
+CREATE DATABASE IF NOT EXISTS `nova` COLLATE 'utf8_general_ci' ;
+GRANT ALL ON `nova`.* TO 'henry'@'%' ;
+
 FLUSH PRIVILEGES ;

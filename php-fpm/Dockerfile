@@ -10,12 +10,8 @@ WORKDIR /var/www/html
 # Install Additional dependencies
 RUN apk update && apk add bash && apk add --no-cache \
     build-base shadow vim curl \
-    php7 \
-    php7-fpm \
-    php7-common \
-    php7-pdo \
-    php7-pdo_mysql \
-    php7-mysqli \
+    php7 php7-fpm php7-common php7-dev \
+    php7-pdo php7-pdo_mysql php7-mysqli \
     php7-mcrypt \
     php7-mbstring \
     php7-xml \
@@ -27,13 +23,10 @@ RUN apk update && apk add bash && apk add --no-cache \
     php7-dom \
     php7-session \
     php7-zlib \
-    php7-dev \
     nodejs \
-    npm \
-    python \
-    py-pip \
-    python-dev \
-    libpng-dev
+    php7-imagick \
+    npm python py-pip python-dev \
+    jpegoptim optipng pngquant gifsicle
 
 # Add and Enable PHP-PDO Extenstions
 RUN docker-php-ext-install pdo pdo_mysql
@@ -48,8 +41,19 @@ RUN docker-php-ext-install bcmath
 # Add and Enable PHP-REDIS Extensions
 RUN pecl install redis && docker-php-ext-enable redis
 
-# Add GD Extension
-RUN docker-php-ext-install gd
+# Add and Enable PHP-imagick Extensions
+RUN apk add --update --no-cache autoconf g++ imagemagick-dev libtool make pcre-dev \
+    && pecl install imagick \
+    && docker-php-ext-enable imagick \
+    && apk del autoconf g++ libtool make pcre-dev
+
+# Add and Enable PHP-gd Extensions
+RUN apk add --update --no-cache freetype-dev libjpeg-turbo-dev libpng-dev \
+    && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+    && docker-php-ext-install gd
+
+# Add and Enable PHP-exif Extensions
+RUN docker-php-ext-install exif
 
 # Add xdebug
 RUN pecl install xdebug && docker-php-ext-enable xdebug
@@ -73,7 +77,7 @@ RUN rm -rf /var/cache/apk/*
 
 # Upgrading Node
 RUN npm cache clean -f
-RUN npm install -g n
+RUN npm install -g n svgo
 RUN n stable
 
 # Add UID '1000' to www-data
