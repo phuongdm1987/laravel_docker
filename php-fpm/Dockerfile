@@ -2,10 +2,11 @@
 FROM php:7.2-fpm-alpine
 
 # Copy composer.lock and composer.json
-#COPY composer.lock composer.json /var/www/html/
+#COPY composer.lock composer.json /var/www/
 
 # Set working directory
-WORKDIR /var/www/html
+ARG APP_CODE_PATH_CONTAINER
+WORKDIR ${LARADOCK_PHP_VERSION}
 
 # Install Additional dependencies
 RUN apk update && apk add bash && apk add --no-cache \
@@ -80,7 +81,7 @@ RUN n stable
 RUN usermod -u 1000 www-data
 
 # Copy existing application directory permissions
-COPY --chown=www-data:www-data . /var/www/html
+COPY --chown=www-data:www-data . ${APP_CODE_PATH_CONTAINER}
 
 #COPY ./laravel.ini /usr/local/etc/php/conf.d
 

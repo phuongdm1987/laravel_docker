@@ -23,13 +23,4 @@ ALTER USER 'henry'@'%' IDENTIFIED WITH mysql_native_password BY 'WtiYJS_MkUk4mQS
 CREATE DATABASE IF NOT EXISTS `backend` COLLATE 'utf8_general_ci' ;
 GRANT ALL ON `backend`.* TO 'henry'@'%' ;
 
-CREATE DATABASE IF NOT EXISTS `vnecos` COLLATE 'utf8_general_ci' ;
-GRANT ALL ON `vnecos`.* TO 'henry'@'%' ;
-
-CREATE DATABASE IF NOT EXISTS `ecommerce` COLLATE 'utf8_general_ci' ;
-GRANT ALL ON `ecommerce`.* TO 'henry'@'%' ;
-
-CREATE DATABASE IF NOT EXISTS `nova` COLLATE 'utf8_general_ci' ;
-GRANT ALL ON `nova`.* TO 'henry'@'%' ;
-
 FLUSH PRIVILEGES ;
