@@ -10,6 +10,8 @@ services:
     container_name: app
     volumes:
       - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
+    environment:
+      - PHP_IDE_CONFIG=${PHP_IDE_CONFIG}
     networks:
       - backend
 
