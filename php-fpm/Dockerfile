@@ -6,7 +6,7 @@ FROM php:7.2-fpm-alpine
 
 # Set working directory
 ARG APP_CODE_PATH_CONTAINER
-WORKDIR ${LARADOCK_PHP_VERSION}
+WORKDIR ${APP_CODE_PATH_CONTAINER}
 
 # Install Additional dependencies
 RUN apk update && apk add bash && apk add --no-cache \

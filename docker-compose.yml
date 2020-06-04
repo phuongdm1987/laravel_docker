@@ -6,6 +6,8 @@ services:
     build:
       context: ./php-fpm
       dockerfile: Dockerfile
+      args:
+        - APP_CODE_PATH_CONTAINER=${APP_CODE_PATH_CONTAINER}
     image: backend-app
     container_name: app
     volumes:
