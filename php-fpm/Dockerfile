@@ -1,5 +1,5 @@
 # Set master image
-FROM php:7.2-fpm-alpine
+FROM php:7.3-fpm-alpine
 
 # Copy composer.lock and composer.json
 #COPY composer.lock composer.json /var/www/
@@ -26,8 +26,9 @@ RUN apk update && apk add bash && apk add --no-cache \
     php7-zlib \
     nodejs \
     php7-imagick \
-    npm python py-pip python-dev \
-    jpegoptim optipng pngquant gifsicle
+    python py-pip python-dev \
+    optipng gifsicle \
+    openssh git nodejs-npm
 
 # Add and Enable PHP-PDO Extenstions
 RUN docker-php-ext-install pdo pdo_mysql
@@ -44,7 +45,7 @@ RUN pecl install redis && docker-php-ext-enable redis
 
 # Add and Enable PHP-imagick Extensions
 RUN apk add --update --no-cache autoconf g++ imagemagick-dev libtool make pcre-dev \
-    && pecl install imagick \
+    && pecl install imagick-3.4.4 \
     && docker-php-ext-enable imagick \
     && apk del autoconf g++ libtool make pcre-dev
 
@@ -57,7 +58,7 @@ RUN apk add --update --no-cache freetype-dev libjpeg-turbo-dev libpng-dev \
 RUN docker-php-ext-install exif
 
 # Add xdebug
-RUN pecl install xdebug && docker-php-ext-enable xdebug
+RUN pecl install xdebug-2.9.6 && docker-php-ext-enable xdebug
 
 # Copy xdebug configuration for remote debugging
 COPY ./xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
@@ -78,7 +79,8 @@ RUN npm install -g n svgo
 RUN n stable
 
 # Add UID '1000' to www-data
-RUN usermod -u 1000 www-data
+RUN groupmod -o -g 1000 www-data && \
+    usermod -o -u 1000 -g www-data www-data
 
 # Copy existing application directory permissions
 COPY --chown=www-data:www-data . ${APP_CODE_PATH_CONTAINER}
