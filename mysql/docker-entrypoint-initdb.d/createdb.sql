@@ -23,4 +23,7 @@ ALTER USER 'henry'@'%' IDENTIFIED WITH mysql_native_password BY 'WtiYJS_MkUk4mQS
 CREATE DATABASE IF NOT EXISTS `backend` COLLATE 'utf8_general_ci' ;
 GRANT ALL ON `backend`.* TO 'henry'@'%' ;
 
+CREATE DATABASE IF NOT EXISTS `api` COLLATE 'utf8_general_ci' ;
+GRANT ALL ON `api`.* TO 'henry'@'%' ;
+
 FLUSH PRIVILEGES ;
