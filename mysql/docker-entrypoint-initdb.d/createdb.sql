@@ -26,4 +26,7 @@ GRANT ALL ON `backend`.* TO 'henry'@'%' ;
 CREATE DATABASE IF NOT EXISTS `api` COLLATE 'utf8_general_ci' ;
 GRANT ALL ON `api`.* TO 'henry'@'%' ;
 
+CREATE DATABASE IF NOT EXISTS `dltl` COLLATE 'utf8_general_ci' ;
+GRANT ALL ON `dltl`.* TO 'henry'@'%' ;
+
 FLUSH PRIVILEGES ;

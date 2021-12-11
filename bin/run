@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+PROJECT_PATH="$(
+    cd "$(dirname "$0")/.."
+    pwd
+)"
+
+
+print_usage() {
+    echo "Usage:"
+    echo "  run seed-clickhouse"
+    echo ""
+}
+
+case "$1" in
+'seed-clickhouse')
+    cat clickhouse/labs_statistics/*.sql | docker exec -i backend-clickhouse clickhouse-client --host clickhouse  --port 9002 --multiquery
+    echo "seeded labs_statistics"
+    ;;
+
+'--help')
+    echo "Run tools from docker containers."
+    echo ""
+    print_usage
+    ;;
+
+*)
+    echo "Invalid command: $1"
+    echo ""
+    print_usage
+    exit 1
+    ;;
+esac
+
