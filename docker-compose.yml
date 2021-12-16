@@ -1,4 +1,4 @@
-version: '3'
+version: '2'
 services:
 
   #Laravel App
@@ -44,26 +44,19 @@ services:
       - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
       - ${NGINX_HOST_LOG_PATH}:/var/log/nginx
     networks:
-      - frontend
       - backend
 
   #MySQL Service
   mysql:
-    build:
-      context: ./mysql
-      args:
-        - MYSQL_VERSION=${MYSQL_VERSION}
+    image: 'mysql:8.0'
     container_name: backend-mysql
     ports:
       - "${MYSQL_PORT}:3306"
     environment:
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - TZ=${WORKSPACE_TIMEZONE}
+      MYSQL_ROOT_PASSWORD: ''
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
     volumes:
-      - ${DATA_PATH_HOST}/mysql:/var/lib/mysql/
+      - 'mysql:/var/lib/mysql/'
     networks:
       - backend
 
@@ -82,13 +75,13 @@ services:
     image: 'phuongdm1987/docker-redis-cluster:1.0.0'
     container_name: backend-redis-cluster
     volumes:
-      - 'redis-cluster:/data'
+      - ${DATA_PATH_HOST}/redis-cluster:/data
     ports:
       - '7000-7005:7000-7005'
-    networks:
-      - backend
     environment:
       DEFAULT_PASSWORD: 'secret'
+    networks:
+      - backend
 
   ### ElasticSearch ########################################
   elasticsearch:
@@ -110,7 +103,6 @@ services:
     depends_on:
       - app
     networks:
-      - frontend
       - backend
 
   clickhouse:
@@ -137,8 +129,6 @@ services:
 
 #Docker Networks
 networks:
-  frontend:
-    driver: ${NETWORKS_DRIVER}
   backend:
     driver: ${NETWORKS_DRIVER}
 #Volumes
