@@ -2,14 +2,14 @@ version: '2'
 services:
 
   #Laravel App
-  app:
+  php-fpm-8.0:
     build:
-      context: ./php-fpm
+      context: ./php-fpm-8.0
       dockerfile: Dockerfile
       args:
         - APP_CODE_PATH_CONTAINER=${APP_CODE_PATH_CONTAINER}
-    image: backend-app
-    container_name: app
+    image: backend-php-fpm-8.0
+    container_name: php-fpm-8.0
     volumes:
       - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
     environment:
@@ -18,12 +18,10 @@ services:
     networks:
       - backend
 
-  worker:
-    container_name: backend-worker
+  php-worker-8.0:
+    container_name: php-worker-8.0
     build:
-      context: ./php-worker
-    depends_on:
-      - app
+      context: ./php-worker-8.0
     volumes:
       - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
       - ./php-worker/supervisord.d:/etc/supervisord.d
@@ -38,8 +36,6 @@ services:
     ports:
       - "${NGINX_HOST_HTTP_PORT}:80"
       - "${NGINX_HOST_HTTPS_PORT}:443"
-    depends_on:
-      - app
     volumes:
       - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
       - ${NGINX_HOST_LOG_PATH}:/var/log/nginx
@@ -75,7 +71,7 @@ services:
     image: 'phuongdm1987/docker-redis-cluster:1.0.0'
     container_name: backend-redis-cluster
     volumes:
-      - ${DATA_PATH_HOST}/redis-cluster:/data
+      - 'redis-cluster:/data'
     ports:
       - '7000-7005:7000-7005'
     environment:
@@ -100,8 +96,6 @@ services:
     ports:
       - "${ELASTICSEARCH_HOST_HTTP_PORT}:9200"
       - "${ELASTICSEARCH_HOST_TRANSPORT_PORT}:9300"
-    depends_on:
-      - app
     networks:
       - backend
 
@@ -120,7 +114,7 @@ services:
 
   mailhog:
     image: 'mailhog/mailhog:latest'
-    container_name: bskend-mailhog
+    container_name: backend-mailhog
     ports:
       - "${MAILHOG_SMTP_PORT}:1025"
       - "${MAILHOG_HTTP_PORT}:8025"
