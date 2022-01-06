@@ -1,7 +1,27 @@
 version: '2'
 services:
 
-  #Laravel App
+  php-fpm-7.2:
+    build:
+      context: ./php-fpm-7.2
+      dockerfile: Dockerfile
+      args:
+        - APP_CODE_PATH_CONTAINER=${APP_CODE_PATH_CONTAINER}
+    image: backend-php-fpm-7.2
+    container_name: php-fpm-7.2
+    volumes:
+      - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
+      - ./php-fpm-7.2/site_categories.json:/var/lib/labs/site_categories.json
+    environment:
+      - PHP_IDE_CONFIG=${PHP_IDE_CONFIG}
+      - COMPOSER_MEMORY_LIMIT=-1
+    networks:
+      - backend
+    extra_hosts:
+      - "dockerhost:${DOCKER_HOST_IP}"
+      - "moderation-tool.local:${HOST_BRIDGE_IP}"
+      - "moderation-api.local:${HOST_BRIDGE_IP}"
+
   php-fpm-8.0:
     build:
       context: ./php-fpm-8.0
@@ -17,6 +37,10 @@ services:
       - COMPOSER_MEMORY_LIMIT=-1
     networks:
       - backend
+    extra_hosts:
+      - "dockerhost:${DOCKER_HOST_IP}"
+      - "moderation-tool.local:${HOST_BRIDGE_IP}"
+      - "moderation-api.local:${HOST_BRIDGE_IP}"
 
   php-worker-8.0:
     container_name: php-worker-8.0
@@ -27,6 +51,10 @@ services:
       - ./php-worker/supervisord.d:/etc/supervisord.d
     networks:
       - backend
+    extra_hosts:
+      - "dockerhost:${DOCKER_HOST_IP}"
+      - "moderation-tool.local:${HOST_BRIDGE_IP}"
+      - "moderation-api.local:${HOST_BRIDGE_IP}"
 
   #Nginx Service
   nginx:
@@ -41,18 +69,32 @@ services:
       - ${NGINX_HOST_LOG_PATH}:/var/log/nginx
     networks:
       - backend
+    depends_on:
+      - php-fpm-8.0
+      - php-fpm-7.2
+    extra_hosts:
+      - "dockerhost:${DOCKER_HOST_IP}"
+      - "moderation-tool.local:${HOST_BRIDGE_IP}"
+      - "moderation-api.local:${HOST_BRIDGE_IP}"
 
   #MySQL Service
   mysql:
-    image: 'mysql:8.0'
+    build:
+      context: ./mysql
+      args:
+        - MYSQL_VERSION=${MYSQL_VERSION}
     container_name: backend-mysql
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - TZ=${WORKSPACE_TIMEZONE}
+    volumes:
+      - ${DATA_PATH_HOST}/mysql:/var/lib/mysql
+      - ${MYSQL_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d
     ports:
       - "${MYSQL_PORT}:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: ''
-      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-    volumes:
-      - 'mysql:/var/lib/mysql/'
     networks:
       - backend
 
@@ -76,6 +118,72 @@ services:
       - '7000-7005:7000-7005'
     environment:
       DEFAULT_PASSWORD: 'secret'
+    networks:
+      - backend
+
+  redis-master:
+    image: redis:latest
+    container_name: backend-redis-master
+    ports:
+      - "${REDIS_MASTER_PORT}:6379"
+    volumes:
+      - redis-master:/var/lib/redis
+    networks:
+      - backend
+
+  redis-slave:
+    image: redis:latest
+    container_name: backend-redis-slave
+    command: redis-server --slaveof redis-master 6379
+    links:
+      - redis-master:redis-master
+    networks:
+      - backend
+
+  redis-sentinel:
+    build: ./redis-sentinel
+    container_name: backend-redis-sentinel
+    environment:
+      - SENTINEL_DOWN_AFTER=5000
+      - SENTINEL_FAILOVER=5000
+    links:
+      - redis-master:redis-master
+      - redis-slave
+    ports:
+      - "${REDIS_SENTINEL_PORT}:26379"
+    networks:
+      - backend
+
+  ### RabbitMQ #############################################
+
+  rabbitMQ:
+    image: rabbitmq:3-management
+    hostname: "${RABBITMQ_HOST_NAME}"
+    container_name: backend-rabbitMQ
+    environment:
+      RABBITMQ_ERLANG_COOKIE: SWQOKODSQALRPCLNMEQG
+      RABBITMQ_DEFAULT_USER: "${RABBITMQ_USER}"
+      RABBITMQ_DEFAULT_PASS: "${RABBITMQ_PASS}"
+      RABBITMQ_DEFAULT_VHOST: /
+    ports:
+      - "${RABBITMQ_NODE_HOST_PORT}:5672"
+      - "${RABBITMQ_MANAGEMENT_HTTP_HOST_PORT}:15672"
+      - "${RABBITMQ_MANAGEMENT_HTTPS_HOST_PORT}:15671"
+    volumes:
+      - ${DATA_PATH_HOST}/rabbitmq:/var/lib/rabbitmq
+      - ${PWD}/rabbitMQ/enabled_plugins:/etc/rabbitmq/enabled_plugins
+    networks:
+      - backend
+
+  ### MongoDB ##############################################
+  mongodb:
+    image: mongo:latest
+    container_name: backend-mongodb
+    command: mongod --storageEngine wiredTiger
+    volumes:
+      - mongodb:/data/db
+    ports:
+      - "${MONGODB_PORT}:27017"
     networks:
       - backend
 
@@ -127,11 +235,13 @@ networks:
     driver: ${NETWORKS_DRIVER}
 #Volumes
 volumes:
-  mysql:
-    driver: ${VOLUMES_DRIVER}
   redis:
     driver: ${VOLUMES_DRIVER}
+  redis-master:
+    driver: ${VOLUMES_DRIVER}
   redis-cluster:
+    driver: ${VOLUMES_DRIVER}
+  mongodb:
     driver: ${VOLUMES_DRIVER}
   clickhouse:
     driver: ${VOLUMES_DRIVER}

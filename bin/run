@@ -18,14 +18,6 @@ case "$1" in
     echo "seeded labs_statistics"
     ;;
 
-'seed-mysql-operation')
-    docker exec -i backend-mysql mysql -uroot -psecret operation < mysql/schema/operation.sql
-    echo "seeded operation sql"
-
-    docker exec -i backend-mysql mysql -uroot -psecret operation < mysql/schema/CoccocAds.sql
-    echo "seeded CoccocAds sql"
-    ;;
-
 '--help')
     echo "Run tools from docker containers."
     echo ""

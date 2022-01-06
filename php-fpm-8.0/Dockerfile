@@ -11,7 +11,8 @@ ENV PHP_OPCACHE_VALIDATE_TIMESTAMPS="1"
 # Install Additional dependencies
 RUN apt-get update && apt-get install -y locales libmagickwand-dev libpng-dev libzip-dev zip --no-install-recommends
 
-RUN pecl install redis xdebug imagick
+RUN pecl install -o -f redis xdebug imagick \
+&& rm -rf /tmp/pear
 
 RUN docker-php-ext-install pdo pdo_mysql pcntl opcache gd zip
 RUN docker-php-ext-enable pdo pdo_mysql pcntl redis xdebug imagick
