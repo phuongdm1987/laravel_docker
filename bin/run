@@ -13,9 +13,23 @@ print_usage() {
 }
 
 case "$1" in
-'seed-clickhouse')
-    cat clickhouse/labs_statistics/*.sql | docker exec -i backend-clickhouse clickhouse-client --host clickhouse  --port 9002 --multiquery
+'seed-clickhouse-adnetwork')
+    cat clickhouse/adnetwork/labs_statistics/*.sql | docker exec -i backend-clickhouse clickhouse-client --host clickhouse  --port 9002 --multiquery
     echo "seeded labs_statistics"
+    ;;
+
+'seed-clickhouse-qc')
+    docker exec -i backend-mysql mysql -uroot -psecret CoccocAds < mysql/schemas/qc-site/dump_views.sql
+    echo "seeded sql views"
+
+    cat clickhouse/qc-site/labs_external_mysql/*.sql | docker exec -i backend-clickhouse clickhouse-client --host clickhouse  --port 9002 --multiquery
+    echo "seeded labs_external_mysql"
+
+    cat clickhouse/qc-site/labs_statistics/*.sql | docker exec -i backend-clickhouse clickhouse-client --host clickhouse  --port 9002 --multiquery
+    echo "seeded labs_statistics"
+
+    cat clickhouse/qc-site/labs_activity_logs/*.sql | docker exec -i backend-clickhouse clickhouse-client --host clickhouse  --port 9002 --multiquery
+    echo "seeded labs_activity_logs"
     ;;
 
 '--help')

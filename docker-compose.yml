@@ -19,8 +19,15 @@ services:
       - backend
     extra_hosts:
       - "dockerhost:${DOCKER_HOST_IP}"
+      - "qc.local:${HOST_BRIDGE_IP}"
+      - "billing.local:${HOST_BRIDGE_IP}"
+      - "ads-data-management.local:${HOST_BRIDGE_IP}"
+      - "ads-data-server.local:${HOST_BRIDGE_IP}"
       - "moderation-tool.local:${HOST_BRIDGE_IP}"
       - "moderation-api.local:${HOST_BRIDGE_IP}"
+      - "publisher.local:${HOST_BRIDGE_IP}"
+      - "operation.local:${HOST_BRIDGE_IP}"
+      - "ad-tag.local:${HOST_BRIDGE_IP}"
 
   php-fpm-8.0:
     build:
@@ -39,8 +46,15 @@ services:
       - backend
     extra_hosts:
       - "dockerhost:${DOCKER_HOST_IP}"
+      - "qc.local:${HOST_BRIDGE_IP}"
+      - "billing.local:${HOST_BRIDGE_IP}"
+      - "ads-data-management.local:${HOST_BRIDGE_IP}"
+      - "ads-data-server.local:${HOST_BRIDGE_IP}"
       - "moderation-tool.local:${HOST_BRIDGE_IP}"
       - "moderation-api.local:${HOST_BRIDGE_IP}"
+      - "publisher.local:${HOST_BRIDGE_IP}"
+      - "operation.local:${HOST_BRIDGE_IP}"
+      - "ad-tag.local:${HOST_BRIDGE_IP}"
 
   php-worker-8.0:
     container_name: php-worker-8.0
@@ -53,8 +67,15 @@ services:
       - backend
     extra_hosts:
       - "dockerhost:${DOCKER_HOST_IP}"
+      - "qc.local:${HOST_BRIDGE_IP}"
+      - "billing.local:${HOST_BRIDGE_IP}"
+      - "ads-data-management.local:${HOST_BRIDGE_IP}"
+      - "ads-data-server.local:${HOST_BRIDGE_IP}"
       - "moderation-tool.local:${HOST_BRIDGE_IP}"
       - "moderation-api.local:${HOST_BRIDGE_IP}"
+      - "publisher.local:${HOST_BRIDGE_IP}"
+      - "operation.local:${HOST_BRIDGE_IP}"
+      - "ad-tag.local:${HOST_BRIDGE_IP}"
 
   #Nginx Service
   nginx:
@@ -74,8 +95,15 @@ services:
       - php-fpm-7.2
     extra_hosts:
       - "dockerhost:${DOCKER_HOST_IP}"
+      - "qc.local:${HOST_BRIDGE_IP}"
+      - "billing.local:${HOST_BRIDGE_IP}"
+      - "ads-data-management.local:${HOST_BRIDGE_IP}"
+      - "ads-data-server.local:${HOST_BRIDGE_IP}"
       - "moderation-tool.local:${HOST_BRIDGE_IP}"
       - "moderation-api.local:${HOST_BRIDGE_IP}"
+      - "publisher.local:${HOST_BRIDGE_IP}"
+      - "operation.local:${HOST_BRIDGE_IP}"
+      - "ad-tag.local:${HOST_BRIDGE_IP}"
 
   #MySQL Service
   mysql:
@@ -156,22 +184,20 @@ services:
 
   ### RabbitMQ #############################################
 
-  rabbitMQ:
-    image: rabbitmq:3-management
+  rabbitmq:
+    build: ./rabbitMQ
     hostname: "${RABBITMQ_HOST_NAME}"
-    container_name: backend-rabbitMQ
+    container_name: backend-rabbitmq
     environment:
-      RABBITMQ_ERLANG_COOKIE: SWQOKODSQALRPCLNMEQG
       RABBITMQ_DEFAULT_USER: "${RABBITMQ_USER}"
       RABBITMQ_DEFAULT_PASS: "${RABBITMQ_PASS}"
-      RABBITMQ_DEFAULT_VHOST: /
     ports:
       - "${RABBITMQ_NODE_HOST_PORT}:5672"
       - "${RABBITMQ_MANAGEMENT_HTTP_HOST_PORT}:15672"
       - "${RABBITMQ_MANAGEMENT_HTTPS_HOST_PORT}:15671"
+    privileged: true
     volumes:
-      - ${DATA_PATH_HOST}/rabbitmq:/var/lib/rabbitmq
-      - ${PWD}/rabbitMQ/enabled_plugins:/etc/rabbitmq/enabled_plugins
+      - ${DATA_PATH_HOST}/rabbitmq:/var/lib/rabbitmq/mnesia
     networks:
       - backend
 
@@ -215,7 +241,24 @@ services:
       - "${CLICKHOUSE_CLIENT_PORT}:9002"
     volumes:
       - clickhouse:/var/lib/clickhouse
-      - ${PWD}/clickhouse/dictionary/external_placement_dictionary.xml:/etc/clickhouse-server/external_placement_dictionary.xml
+
+      - ${PWD}/clickhouse/qc-site/dictionary/external_serving_system_status_dictionary.xml:/etc/clickhouse-server/external_serving_system_status_dictionary.xml
+      - ${PWD}/clickhouse/qc-site/dictionary/external_User_dictionary.xml:/etc/clickhouse-server/external_User_dictionary.xml
+      - ${PWD}/clickhouse/qc-site/dictionary/external_UniCampaign_dictionary.xml:/etc/clickhouse-server/external_UniCampaign_dictionary.xml
+      - ${PWD}/clickhouse/qc-site/dictionary/external_AgencyIdView_dictionary.xml:/etc/clickhouse-server/external_AgencyIdView_dictionary.xml
+      - ${PWD}/clickhouse/qc-site/dictionary/external_MccIdView_dictionary.xml:/etc/clickhouse-server/external_MccIdView_dictionary.xml
+      - ${PWD}/clickhouse/qc-site/dictionary/external_SupportIdView_dictionary.xml:/etc/clickhouse-server/external_SupportIdView_dictionary.xml
+      - ${PWD}/clickhouse/qc-site/dictionary/external_SaleIdView_dictionary.xml:/etc/clickhouse-server/external_SaleIdView_dictionary.xml
+      - ${PWD}/clickhouse/qc-site/dictionary/external_RecentActiveAdvertView_dictionary.xml:/etc/clickhouse-server/external_RecentActiveAdvertView_dictionary.xml
+      - ${PWD}/clickhouse/qc-site/dictionary/external_RecentActiveMatchView_dictionary.xml:/etc/clickhouse-server/external_RecentActiveMatchView_dictionary.xml
+      - ${PWD}/clickhouse/qc-site/dictionary/external_RecentActiveExtensionView_dictionary.xml:/etc/clickhouse-server/external_RecentActiveExtensionView_dictionary.xml
+      - ${PWD}/clickhouse/qc-site/dictionary/external_polygon_regions_dictionary.xml:/etc/clickhouse-server/external_polygon_regions_dictionary.xml
+      - ${PWD}/clickhouse/qc-site/dictionary/external_ExtensionOccasion_dictionary.xml:/etc/clickhouse-server/external_ExtensionOccasion_dictionary.xml
+      - ${PWD}/clickhouse/qc-site/dictionary/dummy_data/polygons.txt:/etc/clickhouse-server/dummy_data/polygons.txt
+      - ${PWD}/clickhouse/qc-site/dictionary/external_Industry_dictionary.xml:/etc/clickhouse-server/external_Industry_dictionary.xml
+      - ${PWD}/clickhouse/qc-site/dictionary/external_UserPreference_dictionary.xml:/etc/clickhouse-server/external_UserPreference_dictionary.xml
+
+      - ${PWD}/clickhouse/adnetwork/dictionary/external_placement_dictionary.xml:/etc/clickhouse-server/external_placement_dictionary.xml
       - ${PWD}/clickhouse/config.xml:/etc/clickhouse-server/config.xml
     networks:
       - backend
@@ -226,6 +269,27 @@ services:
     ports:
       - "${MAILHOG_SMTP_PORT}:1025"
       - "${MAILHOG_HTTP_PORT}:8025"
+    networks:
+      - backend
+
+  zookeeper:
+    image: wurstmeister/zookeeper
+    container_name: backend-zookeeper
+    ports:
+      - "${ZOOKEEPER_PORT}:2181"
+    networks:
+      - backend
+
+  kafka:
+    image: wurstmeister/kafka
+    container_name: backend-kafka
+    ports:
+      - "${KAFKA_PORT}:9092"
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: host.docker.internal # for mac/windows use this value in your docker-compose.yml host.docker.internal
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - backend
 

@@ -18,3 +18,8 @@
 - add `extra_hosts` for services need to call other services (php-fpm, nginx, php-worker ...)
     
     `- "moderation-tool.local:${HOST_BRIDGE_IP}"`
+
+## projects
+- `bin/minion` change Shebang of run script files `#!/usr/bin/php` to `#!/usr/local/bin/php`, update file `CRLF` to `LF`
+- load more env from .env
+- update logs, cache path to each projects

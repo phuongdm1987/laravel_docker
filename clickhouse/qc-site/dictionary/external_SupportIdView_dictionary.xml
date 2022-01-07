@@ -1,0 +1,35 @@
+<yandex>
+    <dictionary>
+        <name>external_SupportIdView</name>
+        <source>
+            <mysql>
+                <port>3306</port>
+                <user>root</user>
+                <password>root</password>
+                <replica>
+                    <host>mysql</host>
+                    <priority>1</priority>
+                </replica>
+                <db>CoccocAds</db>
+                <table>SupportIdView</table>
+            </mysql>
+        </source>
+        <lifetime>
+            <min>600</min>
+            <max>900</max>
+        </lifetime>
+        <layout>
+            <hashed/>
+        </layout>
+        <structure>
+            <id>
+                <name>client_id</name>
+            </id>
+            <attribute>
+                <name>support_id</name>
+                <type>UInt64</type>
+                <null_value>0</null_value>
+            </attribute>
+        </structure>
+    </dictionary>
+</yandex>
