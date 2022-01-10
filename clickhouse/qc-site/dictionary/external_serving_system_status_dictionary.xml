@@ -8,7 +8,7 @@
             <mysql>
                 <port>3306</port>
                 <user>root</user>
-                <password>root</password>
+                <password>secret</password>
                 <replica>
                     <host>mysql</host>
                     <priority>1</priority>
@@ -39,7 +39,7 @@
             <mysql>
                 <port>3306</port>
                 <user>root</user>
-                <password>root</password>
+                <password>secret</password>
                 <replica>
                     <host>mysql</host>
                     <priority>1</priority>
@@ -75,7 +75,7 @@
             <mysql>
                 <port>3306</port>
                 <user>root</user>
-                <password>root</password>
+                <password>secret</password>
                 <replica>
                     <host>mysql</host>
                     <priority>1</priority>

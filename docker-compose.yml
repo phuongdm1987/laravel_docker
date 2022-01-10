@@ -25,9 +25,6 @@ services:
       - "ads-data-server.local:${HOST_BRIDGE_IP}"
       - "moderation-tool.local:${HOST_BRIDGE_IP}"
       - "moderation-api.local:${HOST_BRIDGE_IP}"
-      - "publisher.local:${HOST_BRIDGE_IP}"
-      - "operation.local:${HOST_BRIDGE_IP}"
-      - "ad-tag.local:${HOST_BRIDGE_IP}"
 
   php-fpm-8.0:
     build:
@@ -46,23 +43,17 @@ services:
       - backend
     extra_hosts:
       - "dockerhost:${DOCKER_HOST_IP}"
-      - "qc.local:${HOST_BRIDGE_IP}"
-      - "billing.local:${HOST_BRIDGE_IP}"
-      - "ads-data-management.local:${HOST_BRIDGE_IP}"
-      - "ads-data-server.local:${HOST_BRIDGE_IP}"
-      - "moderation-tool.local:${HOST_BRIDGE_IP}"
-      - "moderation-api.local:${HOST_BRIDGE_IP}"
       - "publisher.local:${HOST_BRIDGE_IP}"
       - "operation.local:${HOST_BRIDGE_IP}"
       - "ad-tag.local:${HOST_BRIDGE_IP}"
 
-  php-worker-8.0:
-    container_name: php-worker-8.0
+  php-worker-7.2:
+    container_name: php-worker-7.2
     build:
-      context: ./php-worker-8.0
+      context: ./php-worker-7.2
     volumes:
       - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
-      - ./php-worker/supervisord.d:/etc/supervisord.d
+      - ./php-worker-7.2/supervisord.d:/etc/supervisord.d
     networks:
       - backend
     extra_hosts:
@@ -73,6 +64,18 @@ services:
       - "ads-data-server.local:${HOST_BRIDGE_IP}"
       - "moderation-tool.local:${HOST_BRIDGE_IP}"
       - "moderation-api.local:${HOST_BRIDGE_IP}"
+
+  php-worker-8.0:
+    container_name: php-worker-8.0
+    build:
+      context: ./php-worker-8.0
+    volumes:
+      - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
+      - ./php-worker-8.0/supervisord.d:/etc/supervisord.d
+    networks:
+      - backend
+    extra_hosts:
+      - "dockerhost:${DOCKER_HOST_IP}"
       - "publisher.local:${HOST_BRIDGE_IP}"
       - "operation.local:${HOST_BRIDGE_IP}"
       - "ad-tag.local:${HOST_BRIDGE_IP}"
@@ -101,6 +104,7 @@ services:
       - "ads-data-server.local:${HOST_BRIDGE_IP}"
       - "moderation-tool.local:${HOST_BRIDGE_IP}"
       - "moderation-api.local:${HOST_BRIDGE_IP}"
+
       - "publisher.local:${HOST_BRIDGE_IP}"
       - "operation.local:${HOST_BRIDGE_IP}"
       - "ad-tag.local:${HOST_BRIDGE_IP}"
