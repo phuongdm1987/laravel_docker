@@ -129,6 +129,8 @@ services:
       - "${MYSQL_PORT}:3306"
     networks:
       - backend
+    cap_add:
+      - SYS_NICE  # CAP_SYS_NICE
 
   #REDIS Service
   redis:
