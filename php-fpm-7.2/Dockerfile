@@ -15,8 +15,7 @@ RUN apt-get install -y zlib1g-dev libicu-dev g++ libpq-dev libssl-dev gettext
 RUN pecl install -o -f redis xdebug imagick mongodb rdkafka \
 && rm -rf /tmp/pear
 
-RUN docker-php-ext-configure intl
-RUN docker-php-ext-install pdo pdo_mysql pcntl opcache gd zip gettext mysqli intl
+RUN docker-php-ext-install pdo pdo_mysql pcntl opcache gd zip gettext mysqli
 RUN docker-php-ext-enable pdo pdo_mysql pcntl redis xdebug imagick mongodb rdkafka
 
 COPY xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini

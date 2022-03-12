@@ -2,6 +2,9 @@ version: '2'
 services:
 
   php-fpm-7.2:
+    extends:
+      file: docker-compose.base.yml
+      service: app_base
     build:
       context: ./php-fpm-7.2
       dockerfile: Dockerfile
@@ -12,21 +15,11 @@ services:
     volumes:
       - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
       - ./php-fpm-7.2/site_categories.json:/var/lib/labs/site_categories.json
-    environment:
-      - PHP_IDE_CONFIG=${PHP_IDE_CONFIG}
-      - COMPOSER_MEMORY_LIMIT=-1
-    networks:
-      - backend
-    extra_hosts:
-      - "dockerhost:${DOCKER_HOST_IP}"
-      - "qc.local:${HOST_BRIDGE_IP}"
-      - "billing.local:${HOST_BRIDGE_IP}"
-      - "ads-data-management.local:${HOST_BRIDGE_IP}"
-      - "ads-data-server.local:${HOST_BRIDGE_IP}"
-      - "moderation-tool.local:${HOST_BRIDGE_IP}"
-      - "moderation-api.local:${HOST_BRIDGE_IP}"
 
   php-fpm-8.0:
+    extends:
+      file: docker-compose.base.yml
+      service: app_base
     build:
       context: ./php-fpm-8.0
       dockerfile: Dockerfile
@@ -36,52 +29,34 @@ services:
     container_name: php-fpm-8.0
     volumes:
       - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
-    environment:
-      - PHP_IDE_CONFIG=${PHP_IDE_CONFIG}
-      - COMPOSER_MEMORY_LIMIT=-1
-    networks:
-      - backend
-    extra_hosts:
-      - "dockerhost:${DOCKER_HOST_IP}"
-      - "publisher.local:${HOST_BRIDGE_IP}"
-      - "operation.local:${HOST_BRIDGE_IP}"
-      - "ad-tag.local:${HOST_BRIDGE_IP}"
 
   php-worker-7.2:
+    extends:
+      file: docker-compose.base.yml
+      service: app_base
     container_name: php-worker-7.2
     build:
       context: ./php-worker-7.2
     volumes:
       - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
       - ./php-worker-7.2/supervisord.d:/etc/supervisord.d
-    networks:
-      - backend
-    extra_hosts:
-      - "dockerhost:${DOCKER_HOST_IP}"
-      - "qc.local:${HOST_BRIDGE_IP}"
-      - "billing.local:${HOST_BRIDGE_IP}"
-      - "ads-data-management.local:${HOST_BRIDGE_IP}"
-      - "ads-data-server.local:${HOST_BRIDGE_IP}"
-      - "moderation-tool.local:${HOST_BRIDGE_IP}"
-      - "moderation-api.local:${HOST_BRIDGE_IP}"
 
   php-worker-8.0:
+    extends:
+      file: docker-compose.base.yml
+      service: app_base
     container_name: php-worker-8.0
     build:
       context: ./php-worker-8.0
     volumes:
       - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
       - ./php-worker-8.0/supervisord.d:/etc/supervisord.d
-    networks:
-      - backend
-    extra_hosts:
-      - "dockerhost:${DOCKER_HOST_IP}"
-      - "publisher.local:${HOST_BRIDGE_IP}"
-      - "operation.local:${HOST_BRIDGE_IP}"
-      - "ad-tag.local:${HOST_BRIDGE_IP}"
 
   #Nginx Service
   nginx:
+    extends:
+      file: docker-compose.base.yml
+      service: app_base
     build:
       context: ./nginx
     container_name: backend-nginx
@@ -91,23 +66,9 @@ services:
     volumes:
       - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
       - ${NGINX_HOST_LOG_PATH}:/var/log/nginx
-    networks:
-      - backend
     depends_on:
       - php-fpm-8.0
       - php-fpm-7.2
-    extra_hosts:
-      - "dockerhost:${DOCKER_HOST_IP}"
-      - "qc.local:${HOST_BRIDGE_IP}"
-      - "billing.local:${HOST_BRIDGE_IP}"
-      - "ads-data-management.local:${HOST_BRIDGE_IP}"
-      - "ads-data-server.local:${HOST_BRIDGE_IP}"
-      - "moderation-tool.local:${HOST_BRIDGE_IP}"
-      - "moderation-api.local:${HOST_BRIDGE_IP}"
-
-      - "publisher.local:${HOST_BRIDGE_IP}"
-      - "operation.local:${HOST_BRIDGE_IP}"
-      - "ad-tag.local:${HOST_BRIDGE_IP}"
 
   #MySQL Service
   mysql:
@@ -127,8 +88,6 @@ services:
       - ${MYSQL_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d
     ports:
       - "${MYSQL_PORT}:3306"
-    networks:
-      - backend
     cap_add:
       - SYS_NICE  # CAP_SYS_NICE
 
@@ -140,8 +99,6 @@ services:
       - ${DATA_PATH_HOST}/redis:/data
     ports:
       - "${REDIS_PORT}:6379"
-    networks:
-      - backend
 
   redis-cluster:
     image: 'phuongdm1987/docker-redis-cluster:1.0.0'
@@ -152,8 +109,6 @@ services:
       - '7000-7005:7000-7005'
     environment:
       DEFAULT_PASSWORD: 'secret'
-    networks:
-      - backend
 
   redis-master:
     image: redis:latest
@@ -162,8 +117,6 @@ services:
       - "${REDIS_MASTER_PORT}:6379"
     volumes:
       - redis-master:/var/lib/redis
-    networks:
-      - backend
 
   redis-slave:
     image: redis:latest
@@ -171,8 +124,6 @@ services:
     command: redis-server --slaveof redis-master 6379
     links:
       - redis-master:redis-master
-    networks:
-      - backend
 
   redis-sentinel:
     build: ./redis-sentinel
@@ -185,8 +136,6 @@ services:
       - redis-slave
     ports:
       - "${REDIS_SENTINEL_PORT}:26379"
-    networks:
-      - backend
 
   ### RabbitMQ #############################################
 
@@ -204,8 +153,6 @@ services:
     privileged: true
     volumes:
       - ${DATA_PATH_HOST}/rabbitmq:/var/lib/rabbitmq/mnesia
-    networks:
-      - backend
 
   ### MongoDB ##############################################
   mongodb:
@@ -216,8 +163,6 @@ services:
       - mongodb:/data/db
     ports:
       - "${MONGODB_PORT}:27017"
-    networks:
-      - backend
 
   ### ElasticSearch ########################################
   elasticsearch:
@@ -236,8 +181,6 @@ services:
     ports:
       - "${ELASTICSEARCH_HOST_HTTP_PORT}:9200"
       - "${ELASTICSEARCH_HOST_TRANSPORT_PORT}:9300"
-    networks:
-      - backend
 
   clickhouse:
     image: yandex/clickhouse-server:19.15.3.6
@@ -266,8 +209,6 @@ services:
 
       - ${PWD}/clickhouse/adnetwork/dictionary/external_placement_dictionary.xml:/etc/clickhouse-server/external_placement_dictionary.xml
       - ${PWD}/clickhouse/config.xml:/etc/clickhouse-server/config.xml
-    networks:
-      - backend
 
   mailhog:
     image: 'mailhog/mailhog:latest'
@@ -275,16 +216,12 @@ services:
     ports:
       - "${MAILHOG_SMTP_PORT}:1025"
       - "${MAILHOG_HTTP_PORT}:8025"
-    networks:
-      - backend
 
   zookeeper:
     image: wurstmeister/zookeeper
     container_name: backend-zookeeper
     ports:
       - "${ZOOKEEPER_PORT}:2181"
-    networks:
-      - backend
 
   kafka:
     image: wurstmeister/kafka
@@ -296,12 +233,29 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+
+  cdn:
+    image: docker.itim.vn/coccoc-qc/cdn
+    container_name: qc-cdn
+    volumes:
+      - cdn:/var/lib/qc/cdn
+    environment:
+      SERVE_SERVER_NAME: cdn.qc.local
+      WEB_DAV_SERVER_NAME: qc-cdn
+      SERVE_PORT_HTTP: 20081
+      SERVE_PORT_HTTPS: 20443
     networks:
-      - backend
+      default:
+        aliases:
+          - qc-cdn
+          - cdn.qc.local
+    ports:
+      - "20081:20081"
+      - "20443:20443"
 
 #Docker Networks
 networks:
-  backend:
+  default:
     driver: ${NETWORKS_DRIVER}
 #Volumes
 volumes:
@@ -316,4 +270,6 @@ volumes:
   clickhouse:
     driver: ${VOLUMES_DRIVER}
   elasticsearch:
+    driver: ${VOLUMES_DRIVER}
+  cdn:
     driver: ${VOLUMES_DRIVER}

@@ -1,0 +1,19 @@
+version: "2"
+
+services:
+  app_base:
+    extra_hosts:
+      - "dockerhost:${DOCKER_HOST_IP}"
+      - "qc.local:${HOST_BRIDGE_IP}"
+      - "billing.local:${HOST_BRIDGE_IP}"
+      - "ads-data-management.local:${HOST_BRIDGE_IP}"
+      - "ads-data-server.local:${HOST_BRIDGE_IP}"
+      - "moderation-tool.local:${HOST_BRIDGE_IP}"
+      - "moderation-api.local:${HOST_BRIDGE_IP}"
+
+      - "publisher.local:${HOST_BRIDGE_IP}"
+      - "operation.local:${HOST_BRIDGE_IP}"
+      - "ad-tag.local:${HOST_BRIDGE_IP}"
+    environment:
+      - PHP_IDE_CONFIG=${PHP_IDE_CONFIG}
+      - COMPOSER_MEMORY_LIMIT=-1
