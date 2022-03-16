@@ -16,8 +16,8 @@ RUN pecl install -o -f redis xdebug imagick mongodb rdkafka \
 && rm -rf /tmp/pear
 
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr/lib --with-png-dir=/usr/lib --with-jpeg-dir=/usr/lib
-RUN docker-php-ext-install pdo pdo_mysql pcntl opcache gd zip gettext mysqli
-RUN docker-php-ext-enable pdo pdo_mysql pcntl redis xdebug imagick mongodb rdkafka
+RUN docker-php-ext-install pdo pdo_mysql pcntl opcache gd zip gettext mysqli exif
+RUN docker-php-ext-enable pdo pdo_mysql pcntl redis xdebug imagick mongodb rdkafka exif
 
 COPY xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 COPY opcache.ini /usr/local/etc/php/conf.d/opcache.ini
