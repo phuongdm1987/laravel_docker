@@ -131,6 +131,9 @@ services:
     environment:
       - SENTINEL_DOWN_AFTER=5000
       - SENTINEL_FAILOVER=5000
+    depends_on:
+      - redis-master
+      - redis-slave
     links:
       - redis-master:redis-master
       - redis-slave
