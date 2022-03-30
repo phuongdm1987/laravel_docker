@@ -1,6 +1,20 @@
 version: '2'
 services:
 
+  php-fpm-7.1:
+    extends:
+      file: docker-compose.base.yml
+      service: app_base
+    build:
+      context: ./php-fpm-7.1
+      dockerfile: Dockerfile
+      args:
+        - APP_CODE_PATH_CONTAINER=${APP_CODE_PATH_CONTAINER}
+    image: backend-php-fpm-7.1
+    container_name: php-fpm-7.1
+    volumes:
+      - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
+
   php-fpm-7.2:
     extends:
       file: docker-compose.base.yml
@@ -69,6 +83,7 @@ services:
     depends_on:
       - php-fpm-8.0
       - php-fpm-7.2
+      - php-fpm-7.1
 
   #MySQL Service
   mysql:
@@ -103,6 +118,7 @@ services:
   redis-cluster:
     image: 'phuongdm1987/docker-redis-cluster:1.0.0'
     container_name: backend-redis-cluster
+    hostname: redis-cluster
     volumes:
       - 'redis-cluster:/data'
     ports:
@@ -188,6 +204,7 @@ services:
   clickhouse:
     image: yandex/clickhouse-server:19.15.3.6
     container_name: backend-clickhouse
+    hostname: clickhouse
     ports:
       - "${CLICKHOUSE_HTTP_PORT}:8124"
       - "${CLICKHOUSE_CLIENT_PORT}:9002"

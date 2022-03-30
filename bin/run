@@ -8,11 +8,33 @@ PROJECT_PATH="$(
 
 print_usage() {
     echo "Usage:"
-    echo "  run seed-clickhouse"
+    echo "  run seed-mysql-qc"
+    echo "  run seed-clickhouse-qc"
+    echo "  run seed-clickhouse-publisher"
     echo ""
 }
 
 case "$1" in
+'publisher')
+    docker exec -e XDEBUG_MODE='coverage' -w /var/www/adnetwork-publisher-ui php-fpm-8.0 ${@:2}
+    ;;
+'operation')
+    docker exec -w /var/www/ads-operation-tool php-fpm-8.0 ${@:2}
+    ;;
+'moderation-tool')
+    docker exec -w /var/www/qc-moderation-tool php-fpm-7.2 ${@:2}
+    ;;
+'moderation-api')
+    docker exec -w /var/www/moderation php-fpm-7.2 ${@:2}
+    ;;
+'qc')
+    docker exec -w /var/www/labs-qc-site php-fpm-7.2 ${@:2}db_core.sql
+    ;;
+
+'seed-dltl-qc')
+    docker exec -i backend-mysql mysql -uroot -psecret dltl < mysql/schemas/dltl/db_core.sql
+    echo "seeded sql all data"
+    ;;
 'seed-mysql-qc')
     docker exec -i backend-mysql mysql -uroot -psecret CoccocAds < mysql/schemas/qc-site/region_table.sql
     echo "seeded sql region table"
@@ -33,7 +55,7 @@ case "$1" in
     echo "seeded labs_activity_logs"
     ;;
 
-'seed-clickhouse-adnetwork')
+'seed-clickhouse-publisher')
     cat clickhouse/adnetwork/labs_statistics/*.sql | docker exec -i backend-clickhouse clickhouse-client --host clickhouse  --port 9002 --multiquery
     echo "seeded labs_statistics"
     ;;

@@ -5,6 +5,7 @@ services:
     extra_hosts:
       - "dockerhost:${DOCKER_HOST_IP}"
       - "qc.local:${HOST_BRIDGE_IP}"
+      - "api-internal.qc.local:${HOST_BRIDGE_IP}"
       - "billing.local:${HOST_BRIDGE_IP}"
       - "ads-data-management.local:${HOST_BRIDGE_IP}"
       - "ads-data-server.local:${HOST_BRIDGE_IP}"
