@@ -23,9 +23,14 @@ COPY opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 # Install PHP Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Add UID '1000' to www-data
-RUN groupmod -o -g 1000 www-data && \
-    usermod -o -u 1000 -g www-data www-data
+# Configure non-root user.
+ARG PUID=1000
+ENV PUID ${PUID}
+ARG PGID=1000
+ENV PGID ${PGID}
+
+RUN groupmod -o -g ${PGID} www-data && \
+    usermod -o -u ${PUID} -g www-data www-data
 
 # Copy existing application directory permissions
 COPY --chown=www-data:www-data . ${APP_CODE_PATH_CONTAINER}
