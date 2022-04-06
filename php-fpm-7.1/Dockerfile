@@ -9,15 +9,32 @@ ARG APP_CODE_PATH_CONTAINER
 ENV PHP_OPCACHE_VALIDATE_TIMESTAMPS="1"
 
 # Install system dependencies
-RUN apt-get update && apt-get install -y zip libzip-dev git unzip libonig-dev libpng-dev zlib1g-dev libmcrypt-dev
+RUN apt-get update && apt-get install -y \
+  zip \
+    libzip-dev \
+    git \
+    unzip \
+    libonig-dev \
+    libpng-dev \
+    zlib1g-dev \
+    libwebp-dev \
+    libjpeg-dev \
+    libpng-dev libxpm-dev \
+    libfreetype6-dev \
+    libjpeg62-turbo-dev \
+    libmcrypt-dev \
+    g++
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN pecl install -o -f redis mcrypt
 
+RUN docker-php-ext-configure gd --with-freetype-dir --with-jpeg-dir --with-png-dir
+RUN docker-php-ext-install -j$(getconf _NPROCESSORS_ONLN) gd
+
 # Install PHP extensions
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd opcache
+RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath opcache
 RUN docker-php-ext-enable mcrypt
 
 COPY opcache.ini /usr/local/etc/php/conf.d/opcache.ini
