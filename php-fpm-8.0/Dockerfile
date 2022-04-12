@@ -23,6 +23,11 @@ COPY opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 # Install PHP Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
+## Install composer packages global
+RUN curl -L https://cs.symfony.com/download/php-cs-fixer-v3.phar -o php-cs-fixer
+RUN 
+RUN mv php-cs-fixer /usr/local/bin/php-cs-fixer
+
 # Configure non-root user.
 ARG PUID=1000
 ENV PUID ${PUID}
