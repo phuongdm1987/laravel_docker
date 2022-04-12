@@ -25,7 +25,6 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 ## Install composer packages global
 RUN curl -L https://cs.symfony.com/download/php-cs-fixer-v3.phar -o php-cs-fixer
-RUN 
 RUN mv php-cs-fixer /usr/local/bin/php-cs-fixer
 
 # Configure non-root user.
