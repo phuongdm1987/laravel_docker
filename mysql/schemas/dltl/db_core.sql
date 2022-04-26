@@ -10,7 +10,7 @@
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
 START TRANSACTION;
-SET time_zone = "+00:00";
+SET time_zone = "+07:00";
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -4043,7 +4043,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 --
 
 INSERT INTO `users` (`id`, `email`, `fullname`, `password`, `gender`, `birthday`, `phone`, `fax`, `address`, `activated`, `avatar`, `created_at`, `updated_at`, `deleted_at`, `remember_token`, `bank_account`, `cover`) VALUES
-(1, 'lienhe@dulichthanglong.vn', 'Admin', '$2y$10$jMw1HTxXJs/7C.Yvgl2f3.o7Jd/mY5aNRNj1k7YlZ3QJqBs/GBW0S', 1, NULL, '841694132368', NULL, '', 1, '2015_07_17_2890a032db.png', '2015-05-25 20:54:45', '2016-03-12 07:18:57', NULL, '9XYLEKFNGECoKBbyL5W9NBNCiC86Rql3rUEAMpvWER8eqb4r2L0rElskocjN', '', ''),
+(1, 'lienhe@dulichthanglong.vn', 'Admin', '$2y$10$vcJ6VKK1AyhTkaJng9niJ.Gl/at25RDbLteehj1Oq8.o5slvZwHwy', 1, NULL, '841694132368', NULL, '', 1, '2015_07_17_2890a032db.png', '2015-05-25 20:54:45', '2016-03-12 07:18:57', NULL, '9XYLEKFNGECoKBbyL5W9NBNCiC86Rql3rUEAMpvWER8eqb4r2L0rElskocjN', '', ''),
 (2, 'alisilove@gmail.com', 'Alisilove', '$2y$10$JIGMlvn7Vs8HxhdsLuayauhi3tlln0m15xWUCFe8Gzq3EQOzxUwaq', 0, NULL, '0904693393', NULL, '', 1, NULL, '2015-05-26 05:53:56', '2016-03-07 05:02:09', '2016-03-07 05:02:09', '3I72WagCMNUqQNgO3q4yUeqne8R1K74kIRpgp0s15uMMWC3uOZfz1ZdgiGev', '', ''),
 (3, 'vngoing@gmail.com', 'Vn Going', '$2y$10$AsdEu3PGG4aZI5nm5z6iO.GEQm1x/tnuM1jBY0eejgWirUJ7f2ave', 0, NULL, '0963267620', NULL, 'Số 1 Ngách 5 ngõ 76 Nguyễn Chí Thanh, Hà Nội', 1, NULL, '2015-05-30 10:39:25', '2016-03-07 05:02:12', '2016-03-07 05:02:12', '3Nbo48cOQz8fj9vTjyHkGbgGtO1m2NFgImX3eILP6B3GoCMCny3L8WY18W8U', '', ''),
 (4, 'nguyentravel.net@gmail.com', 'Nguyễn Travel', '$2y$10$LDDEDiwswH.YrBTyph4MduuuNySkjYafklkxik2WxxnnEWpfSdqqm', 0, NULL, '0973016636', NULL, 'Số 1, Ngách 5, Ngõ 76 Nguyễn Chí Thanh, Đống Đa, Hà Nội', 1, NULL, '2015-06-01 20:19:28', '2016-03-07 05:02:14', '2016-03-07 05:02:14', 'TOKPl5fYVy9ekd3j21k9J5DgZmvdbKxbeFQVOO2letBfJJ0O1jdzxw2LADlI', '', ''),

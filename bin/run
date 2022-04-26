@@ -28,10 +28,10 @@ case "$1" in
     docker exec -w /var/www/moderation php-fpm-7.2 ${@:2}
     ;;
 'qc')
-    docker exec -w /var/www/labs-qc-site php-fpm-7.2 ${@:2}db_core.sql
+    docker exec -w /var/www/labs-qc-site php-fpm-7.2 ${@:2}
     ;;
 
-'seed-dltl-qc')
+'seed-mysql-dltl')
     docker exec -i backend-mysql mysql -uroot -psecret dltl < mysql/schemas/dltl/db_core.sql
     echo "seeded sql all data"
     ;;
@@ -73,4 +73,3 @@ case "$1" in
     exit 1
     ;;
 esac
-

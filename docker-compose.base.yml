@@ -16,5 +16,15 @@ services:
       - "operation.local:${HOST_BRIDGE_IP}"
       - "ad-tag.local:${HOST_BRIDGE_IP}"
     environment:
+      - XDEBUG_CLIENT_HOST=172.17.0.1
+      - XDEBUG_CLIENT_PORT=9003
       - PHP_IDE_CONFIG=${PHP_IDE_CONFIG}
       - COMPOSER_MEMORY_LIMIT=-1
+    build:
+      dockerfile: Dockerfile
+      args:
+        - PUID=${PUID}
+        - PGID=${PGID}
+        - APP_CODE_PATH_CONTAINER=${APP_CODE_PATH_CONTAINER}
+        - PHP_OPCACHE_VALIDATE_TIMESTAMPS=${PHP_OPCACHE_VALIDATE_TIMESTAMPS}
+        - DOCKER_HOST_IP=${DOCKER_HOST_IP}

@@ -7,11 +7,6 @@ services:
       service: app_base
     build:
       context: ./php-fpm-7.1
-      dockerfile: Dockerfile
-      args:
-        - PUID=${PUID}
-        - PGID=${PGID}
-        - APP_CODE_PATH_CONTAINER=${APP_CODE_PATH_CONTAINER}
     image: backend-php-fpm-7.1
     container_name: php-fpm-7.1
     volumes:
@@ -23,11 +18,6 @@ services:
       service: app_base
     build:
       context: ./php-fpm-7.2
-      dockerfile: Dockerfile
-      args:
-        - PUID=${PUID}
-        - PGID=${PGID}
-        - APP_CODE_PATH_CONTAINER=${APP_CODE_PATH_CONTAINER}
     image: backend-php-fpm-7.2
     container_name: php-fpm-7.2
     volumes:
@@ -40,11 +30,6 @@ services:
       service: app_base
     build:
       context: ./php-fpm-8.0
-      dockerfile: Dockerfile
-      args:
-        - PUID=${PUID}
-        - PGID=${PGID}
-        - APP_CODE_PATH_CONTAINER=${APP_CODE_PATH_CONTAINER}
     image: backend-php-fpm-8.0
     container_name: php-fpm-8.0
     volumes:
