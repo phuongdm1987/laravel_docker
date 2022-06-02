@@ -45,6 +45,7 @@ services:
     volumes:
       - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
       - ./php-worker-7.2/supervisord.d:/etc/supervisord.d
+      - ./kafka/salesforce-gateway:/etc/coccoc/salesforce_gateway
 
   php-worker-8.0:
     extends:
@@ -193,7 +194,7 @@ services:
       - "${ELASTICSEARCH_HOST_TRANSPORT_PORT}:9300"
 
   clickhouse:
-    image: yandex/clickhouse-server:19.15.3.6
+    image: yandex/clickhouse-server:21.3.20.1
     container_name: backend-clickhouse
     hostname: clickhouse
     ports:
@@ -264,6 +265,50 @@ services:
       - "20081:20081"
       - "20443:20443"
 
+  ### SONARQUBE ################################################
+  sonarqube:
+    build:
+      context: ./sonarqube
+    hostname: "${SONARQUBE_HOSTNAME}"
+    volumes:
+      - ${DATA_PATH_HOST}/sonarqube/conf:/opt/sonarqube/conf
+      - ${DATA_PATH_HOST}/sonarqube/data:/opt/sonarqube/data
+      - ${DATA_PATH_HOST}/sonarqube/logs:/opt/sonarqube/logs
+      - ${DATA_PATH_HOST}/sonarqube/extensions:/opt/sonarqube/extensions
+      - ${DATA_PATH_HOST}/sonarqube/plugins:/opt/sonarqube/lib/bundled-plugins
+    ports:
+      - ${SONARQUBE_PORT}:9000
+    depends_on:
+      - postgres
+    environment:
+      - sonar.jdbc.username=${SONARQUBE_POSTGRES_USER}
+      - sonar.jdbc.password=${SONARQUBE_POSTGRES_PASSWORD}
+      - sonar.jdbc.url=jdbc:postgresql://${SONARQUBE_POSTGRES_HOST}:5432/${SONARQUBE_POSTGRES_DB}
+    networks:
+      default:
+        aliases:
+          - sonar.local
+
+  ### PostgreSQL ###########################################
+  postgres:
+    build:
+      context: ./postgres
+      args:
+        - POSTGRES_VERSION=${POSTGRES_VERSION}
+    volumes:
+      - ${DATA_PATH_HOST}/postgres:/var/lib/postgresql/data
+      - ${POSTGRES_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - SONARQUBE_POSTGRES_INIT=${SONARQUBE_POSTGRES_INIT}
+      - SONARQUBE_POSTGRES_DB=${SONARQUBE_POSTGRES_DB}
+      - SONARQUBE_POSTGRES_USER=${SONARQUBE_POSTGRES_USER}
+      - SONARQUBE_POSTGRES_PASSWORD=${SONARQUBE_POSTGRES_PASSWORD}
+
 #Docker Networks
 networks:
   default:
@@ -283,4 +328,8 @@ volumes:
   elasticsearch:
     driver: ${VOLUMES_DRIVER}
   cdn:
+    driver: ${VOLUMES_DRIVER}
+  sonarqube:
+    driver: ${VOLUMES_DRIVER}
+  postgres:
     driver: ${VOLUMES_DRIVER}

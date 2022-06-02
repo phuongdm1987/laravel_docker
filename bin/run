@@ -11,6 +11,7 @@ print_usage() {
     echo "  run seed-mysql-qc"
     echo "  run seed-clickhouse-qc"
     echo "  run seed-clickhouse-publisher"
+    echo "  run seed-clickhouse-moderation-tool"
     echo ""
 }
 
@@ -43,6 +44,10 @@ case "$1" in
     docker exec -i backend-mysql mysql -uroot -psecret CoccocAds < mysql/schemas/qc-site/dump_views.sql
     echo "seeded sql views"
     ;;
+'seed-mysql-sfgw')
+    docker exec -i backend-mysql mysql -uroot -psecret salesforce_gateway < mysql/schemas/salesforce-gateway/default.sql
+    echo "seeded sql database & tables"
+    ;;
 
 'seed-clickhouse-qc')
     cat clickhouse/qc-site/labs_external_mysql/*.sql | docker exec -i backend-clickhouse clickhouse-client --host clickhouse  --port 9002 --multiquery
@@ -58,6 +63,11 @@ case "$1" in
 'seed-clickhouse-publisher')
     cat clickhouse/adnetwork/labs_statistics/*.sql | docker exec -i backend-clickhouse clickhouse-client --host clickhouse  --port 9002 --multiquery
     echo "seeded labs_statistics"
+    ;;
+
+'seed-clickhouse-moderation-tool')
+    cat clickhouse/moderation-tool/*.sql | docker exec -i backend-clickhouse clickhouse-client --host clickhouse  --port 9002 --multiquery
+    echo "seeded moderation tool clickhouse database"
     ;;
 
 '--help')
