@@ -1,3 +1,5 @@
-CREATE DATABASE IF NOT EXISTS moderation_tool;
+CREATE DATABASE IF NOT EXISTS moderation;
+CREATE DATABASE IF NOT EXISTS triggers;
+CREATE DATABASE IF NOT EXISTS kafka;
 
-USE moderation_tool;
+USE moderation;
