@@ -6,7 +6,7 @@ FROM php:7.2-fpm-buster
 
 # Install Additional dependencies
 RUN apt-get update && apt-get install -y locales libmagickwand-dev libpng-dev libzip-dev zip librdkafka-dev --no-install-recommends
-RUN apt-get install -y zlib1g-dev libicu-dev g++ libpq-dev libssl-dev gettext
+RUN apt-get install -y zlib1g-dev libicu-dev g++ libpq-dev libssl-dev gettext rsync
 
 RUN pecl install -o -f redis xdebug imagick mongodb rdkafka \
 && rm -rf /tmp/pear
