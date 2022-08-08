@@ -23,6 +23,7 @@ services:
     volumes:
       - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
       - ./php-fpm-7.2/site_categories.json:/var/lib/labs/site_categories.json
+      - ./php-fpm-7.2/skin-tool/:/etc/coccoc/browser_skin_admin_tool/
 
   php-fpm-8.0:
     extends:
@@ -310,6 +311,13 @@ services:
       - SONARQUBE_POSTGRES_DB=${SONARQUBE_POSTGRES_DB}
       - SONARQUBE_POSTGRES_USER=${SONARQUBE_POSTGRES_USER}
       - SONARQUBE_POSTGRES_PASSWORD=${SONARQUBE_POSTGRES_PASSWORD}
+
+
+
+  publisher-ui:
+    image: ccr.itim.vn/ads/adnetwork-publisher-ui:0.0.0-1690-g120cab2d
+    ports:
+      - 9030:9000
 
 #Docker Networks
 networks:
