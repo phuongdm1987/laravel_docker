@@ -1,12 +1,27 @@
 # Set master image
 FROM php:7.2-fpm-buster
 
+USER root
 # Copy composer.lock and composer.json
 #COPY composer.lock composer.json /var/www/
 
 # Install Additional dependencies
-RUN apt-get update && apt-get install -y locales libmagickwand-dev libpng-dev libzip-dev zip librdkafka-dev --no-install-recommends
-RUN apt-get install -y zlib1g-dev libicu-dev g++ libpq-dev libssl-dev gettext rsync
+RUN apt-get update && apt-get install -y locales  \
+    libmagickwand-dev  \
+    libpng-dev  \
+    libzip-dev  \
+    zip  \
+    librdkafka-dev --no-install-recommends
+RUN apt-get install -y zlib1g-dev  \
+    libicu-dev  \
+    g++  \
+    libpq-dev  \
+    libssl-dev  \
+    gettext  \
+    rsync  \
+    libtesseract-dev  \
+    tesseract-ocr  \
+    tesseract-ocr-vie
 
 RUN pecl install -o -f redis xdebug imagick mongodb rdkafka \
 && rm -rf /tmp/pear
@@ -44,7 +59,11 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 # Copy existing application directory permissions
 COPY --chown=www-data:www-data . ${APP_CODE_PATH_CONTAINER}
-WORKDIR ${APP_CODE_PATH_CONTAINER}
+
+#change ownership of our applications
+RUN chown -R www-data:www-data /var/www
 
 # Change current user to www
 USER www-data
+
+WORKDIR ${APP_CODE_PATH_CONTAINER}

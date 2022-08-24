@@ -19,6 +19,8 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 ## Install composer packages global
 RUN curl -L https://cs.symfony.com/download/php-cs-fixer-v3.phar -o php-cs-fixer
 RUN mv php-cs-fixer /usr/local/bin/php-cs-fixer
+RUN chown -R www-data:www-data /usr/local/bin/php-cs-fixer
+RUN chmod -R 777 /usr/local/bin/php-cs-fixer
 
 # Configure non-root user.
 ARG PUID=1000
@@ -38,6 +40,10 @@ COPY xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
 # Copy existing application directory permissions
 COPY --chown=www-data:www-data . ${APP_CODE_PATH_CONTAINER}
+
+#change ownership of our applications
+RUN chown -R www-data:www-data /var/www
+
 WORKDIR ${APP_CODE_PATH_CONTAINER}
 
 # Change current user to www

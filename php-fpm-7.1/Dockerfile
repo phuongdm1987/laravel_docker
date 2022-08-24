@@ -68,6 +68,10 @@ COPY xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
 # Copy existing application directory permissions
 COPY --chown=www-data:www-data . ${APP_CODE_PATH_CONTAINER}
+
+#change ownership of our applications
+RUN chown -R www-data:www-data /var/www
+
 WORKDIR ${APP_CODE_PATH_CONTAINER}
 
 # Change current user to www
