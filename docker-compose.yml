@@ -11,6 +11,7 @@ services:
     container_name: php-fpm-7.1
     volumes:
       - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
+      - ./php-fpm-7.1/skin-tool/rsync_password.txt:/etc/coccoc/browser_skin_admin_tool/rsync_password.txt
 
   php-fpm-7.2:
     extends:
@@ -104,7 +105,7 @@ services:
     build: ./redis
     container_name: backend-redis
     volumes:
-      - ${DATA_PATH_HOST}/redis:/data
+      - redis:/data
     ports:
       - "${REDIS_PORT}:6379"
 
@@ -125,6 +126,7 @@ services:
     ports:
       - "${REDIS_MASTER_PORT}:6379"
     volumes:
+      - redis-master:/data
       - redis-master:/var/lib/redis
 
   redis-slave:
@@ -133,6 +135,9 @@ services:
     command: redis-server --slaveof redis-master 6379
     links:
       - redis-master:redis-master
+    volumes:
+      - redis-slave:/data
+      - redis-slave:/var/lib/redis
 
   redis-sentinel:
     build: ./redis-sentinel
@@ -148,6 +153,8 @@ services:
       - redis-slave
     ports:
       - "${REDIS_SENTINEL_PORT}:26379"
+    volumes:
+      - redis-sentinel:/data
 
   ### RabbitMQ #############################################
 
@@ -164,7 +171,7 @@ services:
       - "${RABBITMQ_MANAGEMENT_HTTPS_HOST_PORT}:15671"
     privileged: true
     volumes:
-      - ${DATA_PATH_HOST}/rabbitmq:/var/lib/rabbitmq/mnesia
+      - rabbitmq:/var/lib/rabbitmq
 
   ### MongoDB ##############################################
   mongodb:
@@ -173,6 +180,7 @@ services:
     command: mongod --storageEngine wiredTiger
     volumes:
       - mongodb:/data/db
+      - mongodb:/data/configdb
     ports:
       - "${MONGODB_PORT}:27017"
 
@@ -322,9 +330,15 @@ volumes:
     driver: ${VOLUMES_DRIVER}
   redis-master:
     driver: ${VOLUMES_DRIVER}
+  redis-slave:
+    driver: ${VOLUMES_DRIVER}
   redis-cluster:
     driver: ${VOLUMES_DRIVER}
+  redis-sentinel:
+    driver: ${VOLUMES_DRIVER}
   mongodb:
+    driver: ${VOLUMES_DRIVER}
+  rabbitmq:
     driver: ${VOLUMES_DRIVER}
   clickhouse:
     driver: ${VOLUMES_DRIVER}

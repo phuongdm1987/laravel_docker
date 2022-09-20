@@ -33,6 +33,15 @@ RUN docker-php-ext-install -j$(getconf _NPROCESSORS_ONLN) gd
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath opcache
 RUN docker-php-ext-enable mcrypt
 
+# Install LDAP
+RUN \
+    apt-get update && \
+    apt-get install libldap2-dev -y && \
+    rm -rf /var/lib/apt/lists/* && \
+    docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ && \
+    docker-php-ext-install ldap
+
+RUN docker-php-ext-install mysqli
 
 ###########################################################################
 # xDebug:
