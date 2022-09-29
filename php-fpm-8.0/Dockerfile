@@ -5,22 +5,33 @@ FROM php:8.0.1-fpm-buster
 #COPY composer.lock composer.json /var/www/
 
 # Install Additional dependencies
-RUN apt-get update && apt-get install -y locales libmagickwand-dev libpng-dev libzip-dev zip --no-install-recommends
+RUN apt-get update && apt-get install -y locales \
+    libmagickwand-dev \
+    libpng-dev \
+    libzip-dev \
+    zlib1g-dev \
+    libicu-dev \
+    g++ \
+    unzip \
+    librdkafka-dev \
+    zip --no-install-recommends
 
-RUN pecl install -o -f redis xdebug imagick \
+RUN pecl install -o -f redis xdebug imagick rdkafka \
 && rm -rf /tmp/pear
 
-RUN docker-php-ext-install pdo pdo_mysql pcntl opcache gd zip
-RUN docker-php-ext-enable pdo pdo_mysql pcntl redis xdebug imagick
+RUN docker-php-ext-install pdo pdo_mysql pcntl opcache gd zip bcmath mysqli
+RUN docker-php-ext-enable pdo pdo_mysql pcntl redis xdebug imagick rdkafka
+
+# Install LDAP
+RUN \
+    apt-get update && \
+    apt-get install libldap2-dev -y && \
+    rm -rf /var/lib/apt/lists/* && \
+    docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ && \
+    docker-php-ext-install ldap
 
 # Install PHP Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
-## Install composer packages global
-RUN curl -L https://cs.symfony.com/download/php-cs-fixer-v3.phar -o php-cs-fixer
-RUN mv php-cs-fixer /usr/local/bin/php-cs-fixer
-RUN chown -R www-data:www-data /usr/local/bin/php-cs-fixer
-RUN chmod -R 777 /usr/local/bin/php-cs-fixer
 
 # Configure non-root user.
 ARG PUID=1000

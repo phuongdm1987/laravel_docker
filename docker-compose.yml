@@ -36,6 +36,7 @@ services:
     container_name: php-fpm-8.0
     volumes:
       - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
+      - ./php-fpm-7.1/skin-tool/rsync_password.txt:/etc/coccoc/browser_skin_admin_tool/rsync_password.txt
 
   php-worker-7.2:
     extends:
