@@ -25,4 +25,7 @@ GRANT ALL ON `operation`.* TO 'root'@'%' ;
 CREATE DATABASE IF NOT EXISTS `CoccocAds` COLLATE 'utf8_general_ci' ;
 GRANT ALL ON `CoccocAds`.* TO 'root'@'%' ;
 
+CREATE DATABASE IF NOT EXISTS `CoccocAds_Test` COLLATE 'utf8_general_ci' ;
+GRANT ALL ON `CoccocAds`.* TO 'root'@'%' ;
+
 FLUSH PRIVILEGES ;

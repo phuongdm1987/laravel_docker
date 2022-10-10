@@ -6,37 +6,45 @@ services:
       file: docker-compose.base.yml
       service: app_base
     build:
-      context: ./php-fpm-7.1
+      context: ./php-fpm
+      args:
+        - LARADOCK_PHP_VERSION=7.2
     image: backend-php-fpm-7.1
     container_name: php-fpm-7.1
     volumes:
       - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
-      - ./php-fpm-7.1/skin-tool/rsync_password.txt:/etc/coccoc/browser_skin_admin_tool/rsync_password.txt
+      - ./php-fpm/site_categories.json:/var/lib/labs/site_categories.json
+      - ./php-fpm/skin-tool/:/etc/coccoc/browser_skin_admin_tool/
 
   php-fpm-7.2:
     extends:
       file: docker-compose.base.yml
       service: app_base
     build:
-      context: ./php-fpm-7.2
+      context: ./php-fpm
+      args:
+        - LARADOCK_PHP_VERSION=7.4
     image: backend-php-fpm-7.2
     container_name: php-fpm-7.2
     volumes:
       - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
-      - ./php-fpm-7.2/site_categories.json:/var/lib/labs/site_categories.json
-      - ./php-fpm-7.2/skin-tool/:/etc/coccoc/browser_skin_admin_tool/
+      - ./php-fpm/site_categories.json:/var/lib/labs/site_categories.json
+      - ./php-fpm/skin-tool/:/etc/coccoc/browser_skin_admin_tool/
 
   php-fpm-8.0:
     extends:
       file: docker-compose.base.yml
       service: app_base
     build:
-      context: ./php-fpm-8.0
+      context: ./php-fpm
+      args:
+        - LARADOCK_PHP_VERSION=8.0.1
     image: backend-php-fpm-8.0
     container_name: php-fpm-8.0
     volumes:
       - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
-      - ./php-fpm-7.1/skin-tool/rsync_password.txt:/etc/coccoc/browser_skin_admin_tool/rsync_password.txt
+      - ./php-fpm/site_categories.json:/var/lib/labs/site_categories.json
+      - ./php-fpm/skin-tool/:/etc/coccoc/browser_skin_admin_tool/
 
   php-worker-7.2:
     extends:
@@ -44,22 +52,27 @@ services:
       service: app_base
     container_name: php-worker-7.2
     build:
-      context: ./php-worker-7.2
+      context: ./php-worker
+      args:
+        - LARADOCK_PHP_VERSION=7.2
     volumes:
       - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
-      - ./php-worker-7.2/supervisord.d:/etc/supervisord.d
+      - ./php-worker/supervisord.d:/etc/supervisord.d
       - ./kafka/salesforce-gateway:/etc/coccoc/salesforce_gateway
 
   php-worker-8.0:
     extends:
       file: docker-compose.base.yml
       service: app_base
-    container_name: php-worker-8.0
+    container_name: php-worker
     build:
-      context: ./php-worker-8.0
+      context: ./php-worker
+      args:
+        - LARADOCK_PHP_VERSION=8.0
     volumes:
       - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
-      - ./php-worker-8.0/supervisord.d:/etc/supervisord.d
+      - ./php-worker/supervisord.d:/etc/supervisord.d
+      - ./kafka/salesforce-gateway:/etc/coccoc/salesforce_gateway
 
   #Nginx Service
   nginx:
