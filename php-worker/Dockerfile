@@ -4,7 +4,8 @@
 #--------------------------------------------------------------------------
 #
 
-FROM backend-php-fpm-8.0
+ARG LARADOCK_PHP_VERSION
+FROM backend-php-fpm-${LARADOCK_PHP_VERSION}
 
 # Change current user to www
 USER root
