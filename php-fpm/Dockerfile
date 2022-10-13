@@ -23,6 +23,7 @@ RUN apt-get update && apt-get install -y locales \
     librdkafka-dev \
     libmcrypt-dev \
     gettext  \
+    npm \
     zip --no-install-recommends
 
 RUN pecl install -o -f redis xdebug imagick rdkafka mcrypt mongodb \
@@ -48,6 +49,10 @@ RUN docker-php-ext-enable pdo pdo_mysql pcntl redis xdebug imagick rdkafka mcryp
 
 # Install PHP Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
+RUN apt-get install -y nodejs
+RUN npm install -g cross-env
 
 # Configure non-root user.
 ARG PUID=1000

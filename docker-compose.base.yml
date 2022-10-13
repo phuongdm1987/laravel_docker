@@ -29,3 +29,8 @@ services:
         - APP_CODE_PATH_CONTAINER=${APP_CODE_PATH_CONTAINER}
         - PHP_OPCACHE_VALIDATE_TIMESTAMPS=${PHP_OPCACHE_VALIDATE_TIMESTAMPS}
         - DOCKER_HOST_IP=${DOCKER_HOST_IP}
+    volumes:
+      - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
+      - ./php-fpm/site_categories.json:/var/lib/labs/site_categories.json
+      - ./php-fpm/skin-tool/rsync_password.txt:/etc/coccoc/browser_skin_admin_tool/rsync_password.txt
+      - ./php-fpm/skin-tool/clickhouse-user-browser_skin_admin-credentials.json:/etc/coccoc-clickhouse-labs/conf/clickhouse-user-browser_skin_admin-credentials.json

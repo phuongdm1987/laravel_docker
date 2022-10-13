@@ -11,10 +11,6 @@ services:
         - LARADOCK_PHP_VERSION=7.2
     image: backend-php-fpm-7.1
     container_name: php-fpm-7.1
-    volumes:
-      - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
-      - ./php-fpm/site_categories.json:/var/lib/labs/site_categories.json
-      - ./php-fpm/skin-tool/:/etc/coccoc/browser_skin_admin_tool/
 
   php-fpm-7.2:
     extends:
@@ -26,10 +22,6 @@ services:
         - LARADOCK_PHP_VERSION=7.4
     image: backend-php-fpm-7.2
     container_name: php-fpm-7.2
-    volumes:
-      - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
-      - ./php-fpm/site_categories.json:/var/lib/labs/site_categories.json
-      - ./php-fpm/skin-tool/:/etc/coccoc/browser_skin_admin_tool/
 
   php-fpm-8.0:
     extends:
@@ -41,10 +33,6 @@ services:
         - LARADOCK_PHP_VERSION=8.0.1
     image: backend-php-fpm-8.0
     container_name: php-fpm-8.0
-    volumes:
-      - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
-      - ./php-fpm/site_categories.json:/var/lib/labs/site_categories.json
-      - ./php-fpm/skin-tool/:/etc/coccoc/browser_skin_admin_tool/
 
   php-worker-7.2:
     extends:
