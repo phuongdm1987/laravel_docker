@@ -76,3 +76,7 @@
 - `bin/minion` change Shebang of run script files `#!/usr/bin/php` to `#!/usr/local/bin/php`, update file `CRLF` to `LF`
 - load more env from .env
 - update logs, cache path to each projects
+
+## minio
+- create service account for each project
+- create bucket for each project and set access policy to public

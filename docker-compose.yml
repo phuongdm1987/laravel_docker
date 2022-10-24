@@ -30,7 +30,7 @@ services:
     build:
       context: ./php-fpm
       args:
-        - LARADOCK_PHP_VERSION=8.0.1
+        - LARADOCK_PHP_VERSION=8.1.0
     image: backend-php-fpm-8.0
     container_name: php-fpm-8.0
 
@@ -322,6 +322,24 @@ services:
       - SONARQUBE_POSTGRES_USER=${SONARQUBE_POSTGRES_USER}
       - SONARQUBE_POSTGRES_PASSWORD=${SONARQUBE_POSTGRES_PASSWORD}
 
+  ### MinIO #################################################
+  minio:
+    image: minio/minio
+    container_name: backend-minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio:/data
+    environment:
+      MINIO_ROOT_USER: root
+      MINIO_ROOT_PASSWORD: p@ssW0rd
+    command: server --console-address ":9001" /data
+    networks:
+      default:
+        aliases:
+          - minio.test
+
 #Docker Networks
 networks:
   default:
@@ -351,4 +369,6 @@ volumes:
   sonarqube:
     driver: ${VOLUMES_DRIVER}
   postgres:
+    driver: ${VOLUMES_DRIVER}
+  minio:
     driver: ${VOLUMES_DRIVER}
