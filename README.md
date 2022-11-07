@@ -4,7 +4,7 @@
 - `cp env.example .env`
 - change config in .env file
 - create new laravel projects in `APP_CODE_PATH_HOST` default `../`
-- run `docker-compose build php-fpm-7.2 php-fpm-8.0` to make image tag
+- run `docker-compose build php-fpm-7.4 php-fpm-8.0` to make image tag
 - `docker-compose up -d` and enjoy :)
 - run `docker-compose build name_services` when add configs file for name_service
 
@@ -59,8 +59,8 @@
     }
 
 ## Docker tips
-- Run container command in folder `docker exec php-fpm-7.2 bash -c "cd absolute-path; command"` 
-- Example `docker exec php-fpm-7.2 bash -c "cd /var/www/labs-qc-site; bin/minion db:migrate --init"`
+- Run container command in folder `docker exec php-fpm-7.4 bash -c "cd absolute-path; command"` 
+- Example `docker exec php-fpm-7.4 bash -c "cd /var/www/labs-qc-site; bin/minion db:migrate --init"`
 
 
 ## Nginx with multiple projects (domains), can curl others

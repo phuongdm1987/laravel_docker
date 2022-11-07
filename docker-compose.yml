@@ -1,17 +1,6 @@
 version: '2'
 services:
 
-  php-fpm-7.1:
-    extends:
-      file: docker-compose.base.yml
-      service: app_base
-    build:
-      context: ./php-fpm
-      args:
-        - LARADOCK_PHP_VERSION=7.2
-    image: backend-php-fpm-7.1
-    container_name: php-fpm-7.1
-
   php-fpm-7.2:
     extends:
       file: docker-compose.base.yml
@@ -19,9 +8,20 @@ services:
     build:
       context: ./php-fpm
       args:
-        - LARADOCK_PHP_VERSION=7.4
+        - LARADOCK_PHP_VERSION=7.2
     image: backend-php-fpm-7.2
     container_name: php-fpm-7.2
+
+  php-fpm-7.4:
+    extends:
+      file: docker-compose.base.yml
+      service: app_base
+    build:
+      context: ./php-fpm
+      args:
+        - LARADOCK_PHP_VERSION=7.4
+    image: backend-php-fpm-7.4
+    container_name: php-fpm-7.4
 
   php-fpm-8.0:
     extends:
@@ -30,19 +30,30 @@ services:
     build:
       context: ./php-fpm
       args:
-        - LARADOCK_PHP_VERSION=8.1.0
+        - LARADOCK_PHP_VERSION=8.0.1
     image: backend-php-fpm-8.0
     container_name: php-fpm-8.0
 
-  php-worker-7.2:
+  php-fpm-8.1:
     extends:
       file: docker-compose.base.yml
       service: app_base
-    container_name: php-worker-7.2
+    build:
+      context: ./php-fpm
+      args:
+        - LARADOCK_PHP_VERSION=8.1.0
+    image: backend-php-fpm-8.1
+    container_name: php-fpm-8.1
+
+  php-worker-7.4:
+    extends:
+      file: docker-compose.base.yml
+      service: app_base
+    container_name: php-worker-7.4
     build:
       context: ./php-worker
       args:
-        - LARADOCK_PHP_VERSION=7.2
+        - LARADOCK_PHP_VERSION=7.4
     volumes:
       - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
       - ./php-worker/supervisord.d:/etc/supervisord.d
@@ -77,9 +88,10 @@ services:
       - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
       - ${NGINX_HOST_LOG_PATH}:/var/log/nginx
     depends_on:
+      - php-fpm-8.1
       - php-fpm-8.0
+      - php-fpm-7.4
       - php-fpm-7.2
-      - php-fpm-7.1
 
   #MySQL Service
   mysql:

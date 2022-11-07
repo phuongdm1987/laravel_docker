@@ -23,13 +23,13 @@ case "$1" in
     docker exec -w /var/www/ads-operation-tool php-fpm-8.0 ${@:2}
     ;;
 'moderation-tool')
-    docker exec -w /var/www/qc-moderation-tool php-fpm-7.2 ${@:2}
+    docker exec -w /var/www/qc-moderation-tool php-fpm-7.4 ${@:2}
     ;;
 'moderation-api')
-    docker exec -w /var/www/moderation php-fpm-7.2 ${@:2}
+    docker exec -w /var/www/moderation php-fpm-7.4 ${@:2}
     ;;
 'qc')
-    docker exec -w /var/www/labs-qc-site php-fpm-7.2 ${@:2}
+    docker exec -w /var/www/labs-qc-site php-fpm-7.4 ${@:2}
     ;;
 
 'seed-mysql-dltl')
