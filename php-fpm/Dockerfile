@@ -42,6 +42,8 @@ RUN apt-get update && apt-get install -y \
     libgbm1 \
     libasound2
 
+RUN apt-get update && apt-get install -y rsync
+
 RUN pecl install -o -f redis xdebug imagick rdkafka mcrypt mongodb \
 && rm -rf /tmp/pear
 
