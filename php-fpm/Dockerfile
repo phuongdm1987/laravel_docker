@@ -45,8 +45,14 @@ RUN apt-get update && apt-get install -y \
 
 RUN apt-get update && apt-get install -y rsync
 
-RUN pecl install -o -f redis xdebug imagick rdkafka mcrypt mongodb \
-&& rm -rf /tmp/pear
+ARG LARADOCK_PHP_VERSION
+RUN if [ ${LARADOCK_PHP_VERSION} = "7.2" ] || [ ${LARADOCK_PHP_VERSION} = "7.4" ]; then \
+        pecl install -o -f redis imagick rdkafka mcrypt mongodb \
+&& rm -rf /tmp/pear; \
+      else \
+        pecl install -o -f redis xdebug imagick rdkafka mcrypt mongodb \
+&& rm -rf /tmp/pear; \
+      fi
 
 # Install LDAP
 RUN \
@@ -57,7 +63,7 @@ RUN \
     docker-php-ext-install ldap
 
 ARG LARADOCK_PHP_VERSION
-RUN if [ ${LARADOCK_PHP_VERSION} = 7.2 ]; then \
+RUN if [ ${LARADOCK_PHP_VERSION} = "7.2" ]; then \
         docker-php-ext-configure gd --with-freetype-dir --with-jpeg-dir --with-png-dir; \
       else \
         docker-php-ext-configure gd --with-freetype --with-jpeg; \
@@ -65,7 +71,13 @@ RUN if [ ${LARADOCK_PHP_VERSION} = 7.2 ]; then \
 
 RUN docker-php-ext-configure pcntl --enable-pcntl
 RUN docker-php-ext-install pdo pdo_mysql pcntl opcache gd zip bcmath mysqli mbstring exif gettext sockets
-RUN docker-php-ext-enable pdo pdo_mysql redis xdebug imagick rdkafka mcrypt mongodb
+
+ARG LARADOCK_PHP_VERSION
+RUN if [ ${LARADOCK_PHP_VERSION} = "7.2" ] || [ ${LARADOCK_PHP_VERSION} = "7.4" ]; then \
+        docker-php-ext-enable pdo pdo_mysql redis imagick rdkafka mcrypt mongodb; \
+      else \
+        docker-php-ext-enable pdo pdo_mysql redis xdebug imagick rdkafka mcrypt mongodb; \
+      fi
 
 # Install PHP Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
