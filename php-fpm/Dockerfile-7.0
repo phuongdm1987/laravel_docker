@@ -1,6 +1,6 @@
 # Set master image
 ARG LARADOCK_PHP_VERSION
-FROM php:${LARADOCK_PHP_VERSION}-fpm-buster
+FROM php:${LARADOCK_PHP_VERSION}-fpm
 
 # Copy composer.lock and composer.json
 #COPY composer.lock composer.json /var/www/
@@ -23,7 +23,6 @@ RUN apt-get update && apt-get install -y locales \
     librdkafka-dev \
     libmcrypt-dev \
     gettext  \
-    npm \
     openssl \
     zip --no-install-recommends
 
@@ -45,7 +44,7 @@ RUN apt-get update && apt-get install -y \
 
 RUN apt-get update && apt-get install -y rsync
 
-RUN pecl install -o -f redis xdebug imagick rdkafka mcrypt mongodb \
+RUN pecl install -o -f redis imagick mcrypt \
 && rm -rf /tmp/pear
 
 # Install LDAP
@@ -65,7 +64,7 @@ RUN if [ ${LARADOCK_PHP_VERSION} = 7.2 ]; then \
 
 RUN docker-php-ext-configure pcntl --enable-pcntl
 RUN docker-php-ext-install pdo pdo_mysql pcntl opcache gd zip bcmath mysqli mbstring exif gettext sockets
-RUN docker-php-ext-enable pdo pdo_mysql redis xdebug imagick rdkafka mcrypt mongodb
+RUN docker-php-ext-enable pdo pdo_mysql redis imagick mcrypt
 
 # Install PHP Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer

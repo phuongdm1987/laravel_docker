@@ -12,6 +12,8 @@ services:
       - "ads-data-server.local:${HOST_BRIDGE_IP}"
       - "moderation-tool.local:${HOST_BRIDGE_IP}"
       - "moderation-api.local:${HOST_BRIDGE_IP}"
+      - "skin-tool.local:${HOST_BRIDGE_IP}"
+      - "old-skin-tool.local:${HOST_BRIDGE_IP}"
       - "crawler.test:${HOST_BRIDGE_IP}"
 
       - "publisher.local:${HOST_BRIDGE_IP}"
