@@ -15,6 +15,7 @@ services:
       - "skin-tool.local:${HOST_BRIDGE_IP}"
       - "old-skin-tool.local:${HOST_BRIDGE_IP}"
       - "crawler.test:${HOST_BRIDGE_IP}"
+      - "old-moderation-api.local:${HOST_BRIDGE_IP}"
 
       - "publisher.local:${HOST_BRIDGE_IP}"
       - "operation.local:${HOST_BRIDGE_IP}"

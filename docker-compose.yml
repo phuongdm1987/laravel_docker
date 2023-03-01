@@ -191,7 +191,7 @@ services:
 
   ### MongoDB ##############################################
   mongodb:
-    image: mongo:4.2
+    image: mongo:6.0
     container_name: backend-mongodb
     command: mongod --storageEngine wiredTiger
     volumes:
