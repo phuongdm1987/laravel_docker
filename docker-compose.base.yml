@@ -20,6 +20,7 @@ services:
       - "publisher.local:${HOST_BRIDGE_IP}"
       - "operation.local:${HOST_BRIDGE_IP}"
       - "ad-tag.local:${HOST_BRIDGE_IP}"
+      - "sonar.local:${HOST_BRIDGE_IP}"
     environment:
       - XDEBUG_CLIENT_HOST=host.docker.internal
       - XDEBUG_CLIENT_PORT=9003
