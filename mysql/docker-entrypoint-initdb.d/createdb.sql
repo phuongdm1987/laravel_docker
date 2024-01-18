@@ -16,16 +16,7 @@
 #     mysql -u root -p < /docker-entrypoint-initdb.d/createdb.sql
 #
 
-CREATE DATABASE IF NOT EXISTS `adnetwork` COLLATE 'utf8_general_ci' ;
-GRANT ALL ON `adnetwork`.* TO 'root'@'%' ;
-
-CREATE DATABASE IF NOT EXISTS `operation` COLLATE 'utf8_general_ci' ;
-GRANT ALL ON `operation`.* TO 'root'@'%' ;
-
-CREATE DATABASE IF NOT EXISTS `CoccocAds` COLLATE 'utf8_general_ci' ;
-GRANT ALL ON `CoccocAds`.* TO 'root'@'%' ;
-
-CREATE DATABASE IF NOT EXISTS `CoccocAds_Test` COLLATE 'utf8_general_ci' ;
-GRANT ALL ON `CoccocAds`.* TO 'root'@'%' ;
+CREATE DATABASE IF NOT EXISTS `audio_book` COLLATE 'utf8_general_ci' ;
+GRANT ALL ON `audio_book`.* TO 'root'@'%' ;
 
 FLUSH PRIVILEGES ;
