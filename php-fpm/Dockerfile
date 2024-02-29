@@ -9,13 +9,15 @@ RUN apt-get update && apt-get install -y \
     locales \
     libpng-dev \
     libjpeg62-turbo-dev \
-    libfreetype6-dev
+    libfreetype6-dev \
+    libicu-dev
 
 RUN pecl install -o -f redis xdebug
 RUN docker-php-ext-enable redis xdebug
 
 RUN docker-php-ext-configure pcntl --enable-pcntl
-RUN docker-php-ext-install pcntl zip exif pdo_mysql
+RUN docker-php-ext-configure intl
+RUN docker-php-ext-install pcntl zip exif pdo_mysql intl
 
 # Install PHP Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer

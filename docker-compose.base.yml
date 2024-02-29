@@ -6,7 +6,7 @@ services:
       - "host.docker.internal:host-gateway"
       - "dockerhost:${DOCKER_HOST_IP}"
     environment:
-      - XDEBUG_CLIENT_HOST=host.docker.internal
+      - XDEBUG_CLIENT_HOST=100.90.120.144
       - XDEBUG_CLIENT_PORT=9003
       - PHP_IDE_CONFIG=${PHP_IDE_CONFIG}
       - COMPOSER_MEMORY_LIMIT=-1
