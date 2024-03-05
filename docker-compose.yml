@@ -74,23 +74,22 @@ services:
     ports:
       - "${REDIS_PORT}:6379"
 
-  ### ElasticSearch ########################################
-  elasticsearch:
-    build: ./elasticsearch
-    container_name: backend-elasticsearch
-    volumes:
-      - elasticsearch:/usr/share/elasticsearch/data
+  meilisearch:
+    container_name: backend-meilisearch
+    image: getmeili/meilisearch:v1.6.2
     environment:
-      - cluster.name=laravel-docker-cluster
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
+      - http_proxy
+      - https_proxy
+      - MEILI_MASTER_KEY=${MEILI_MASTER_KEY:-masterKey}
+      - MEILI_NO_ANALYTICS=${MEILI_NO_ANALYTICS:-true}
+      - MEILI_ENV=${MEILI_ENV:-development}
+      - MEILI_LOG_LEVEL
+      - MEILI_DB_PATH=${MEILI_DB_PATH:-/data.ms}
     ports:
-      - "${ELASTICSEARCH_HOST_HTTP_PORT}:9200"
-      - "${ELASTICSEARCH_HOST_TRANSPORT_PORT}:9300"
+      - ${MEILI_PORT:-7700}:7700
+    volumes:
+      - meilisearch:/data
+    restart: unless-stopped
 
   mailhog:
     image: 'mailhog/mailhog:latest'
@@ -138,9 +137,9 @@ networks:
 volumes:
   redis:
     driver: ${VOLUMES_DRIVER}
-  elasticsearch:
-    driver: ${VOLUMES_DRIVER}
   postgres:
     driver: ${VOLUMES_DRIVER}
   minio:
+    driver: ${VOLUMES_DRIVER}
+  meilisearch:
     driver: ${VOLUMES_DRIVER}
